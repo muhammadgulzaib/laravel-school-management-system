@@ -27,6 +27,11 @@ class TimeTableService
         ];
     }
 
+    public static function allRoom($section_id)
+    {
+        return TimeTable::where('section_id',$section_id)->first()->room_id;
+    }
+
     public static function checkSubjectInTimeTable($class_id, $section_id, $day)
     {
         $subjects = DB::table('grade_subject')->whereGradeId($class_id)->get();
@@ -46,9 +51,9 @@ class TimeTableService
     public static function checkTeacherInTimeTable($class_id, $day, $start_time, $end_time, $subject_id, $section_id)
     {
         $subjects = DB::table('grade_subject')->whereGradeId($class_id)->get();
-        $subjectRand = $subjects[rand(0,$subjects->count() - 1)];
+        $subjectRand = $subjects[rand(0, $subjects->count() - 1)];
         $teachers = TeacherSubject::whereSubjectId($subjectRand->subject_id)->get();
-        foreach ($teachers as $teacher){
+        foreach ($teachers as $teacher) {
             $data = TimeTable::where('day', $day)
                 ->where('grade_id', $class_id)
 //                ->where('section_id', $section_id)
@@ -63,7 +68,6 @@ class TimeTableService
                 ];
             }
         }
-
         return null;
     }
 

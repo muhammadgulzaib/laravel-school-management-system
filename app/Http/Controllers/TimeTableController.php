@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Grade;
 use App\Room;
+use App\Section;
 use App\Services\TimeTableService;
 use App\Subject;
 use App\TimeTable;
@@ -48,12 +49,16 @@ class TimeTableController extends Controller
         $from = \Carbon\Carbon::createFromFormat('H:i', $request->end_time);
         $diff_in_hours = $to->diffInMinutes($from);
         $classes = Grade::all();
+        $sectionCount = Section::all()->count();
+        $roomCount = Room::all()->count();
 
+        if ($roomCount >= $sectionCount){
         foreach ($classes as $class) {
             TimeTable::whereGradeId($class->id)->delete();
             $assign_subject = DB::table('grade_subject')->where('grade_id', $class->id)->count();
             $oneLectureTime = $diff_in_hours / $assign_subject;
             foreach (TimeTableService::getSectionOfClass($class->id) as $sectionIndex => $section) {
+
                 foreach (TimeTableService::DayArray() as $day) {
 
                     if ($day != "Saturday" || $day != "Sunday") {
@@ -65,7 +70,7 @@ class TimeTableController extends Controller
                             TimeTable::create([
                                 'grade_id' => $class->id,
                                 'section_id' => $section->id ?? null,
-//                                'room_id' => TimeTableService::checkRoomClass($class->id,$section->id, $day) ?? null,
+                                'room_id' => Room::all()[$sectionIndex]->name ?? null,
                                 'subject_id' => $teacherSubject['subject_id'] ?? null,
                                 'teacher_id' => $teacherSubject['teacher_id'] ?? null,
                                 'day' => $day,
@@ -77,6 +82,8 @@ class TimeTableController extends Controller
                 }
             }
         }
+    }
+
         return redirect(route('time-table.index'));
     }
 

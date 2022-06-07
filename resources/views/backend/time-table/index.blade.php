@@ -101,8 +101,9 @@
 
         @foreach(\App\Services\TimeTableService::allSection() as $section)
             <div class="mt-8 p-5 bg-white rounded w-full border-b-4 border-gray-300">
-                <h3 class="text-center" style="font-size: 25px">Class: {{ $section->grade[0]->class_name }}
-                    ({{ $section->name }})</h3>
+                <h3 class="text-center" style="font-size: 25px">
+                    Class: {{ $section->grade[0]->class_name }} ({{ $section->name }}) - {{ \App\Services\TimeTableService::allRoom($section->id)  }}
+                </h3>
                 <div class="container">
                     <div class="table-responsive">
                         <table class="table table-bordered text-center">
