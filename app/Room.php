@@ -4,12 +4,11 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Subject extends Model
+class Room extends Model
 {
     protected $fillable = [
         'name',
-        'slug',
-        'subject_code',
-        'description'
+        'description',
     ];
+
 }

@@ -17,8 +17,8 @@ class SubjectController extends Controller
      */
     public function index()
     {
-        $subjects = Subject::with('teacher')->latest()->paginate(10);
-        
+        $subjects = Subject::latest()->paginate(10);
+
         return view('backend.subjects.index', compact('subjects'));
     }
 
@@ -45,7 +45,6 @@ class SubjectController extends Controller
         $request->validate([
             'name'          => 'required|string|max:255|unique:subjects',
             'subject_code'  => 'required|numeric',
-            'teacher_id'    => 'required|numeric',
             'description'   => 'required|string|max:255'
         ]);
 
@@ -96,7 +95,6 @@ class SubjectController extends Controller
         $request->validate([
             'name'          => 'required|string|max:255|unique:subjects,name,'.$subject->id,
             'subject_code'  => 'required|numeric',
-            'teacher_id'    => 'required|numeric',
             'description'   => 'required|string|max:255'
         ]);
 

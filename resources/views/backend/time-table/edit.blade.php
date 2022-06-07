@@ -5,7 +5,7 @@
 
         <div class="flex items-center justify-between mb-6">
             <div>
-                <h2 class="text-gray-700 uppercase font-bold">Create Teacher</h2>
+                <h2 class="text-gray-700 uppercase font-bold">Edit Teacher</h2>
             </div>
             <div class="flex flex-wrap items-center">
                 <a href="{{ route('teacher.index') }}" class="bg-gray-200 text-gray-700 text-sm uppercase py-2 px-4 flex items-center rounded">
@@ -16,8 +16,16 @@
         </div>
 
         <div class="table w-full mt-8 bg-white rounded">
-            <form action="{{ route('teacher.store') }}" method="POST" class="w-full max-w-xl px-6 py-12" enctype="multipart/form-data">
+            <form action="{{ route('teacher.update',$teacher->id) }}" method="POST" class="w-full max-w-xl px-6 py-12" enctype="multipart/form-data">
                 @csrf
+                @method('PUT')
+
+                <div class="md:flex md:items-center mb-6">
+                    <div class="md:w-1/3"></div>
+                    <div class="md:w-2/3">
+                        <img class="w-20 h-20 sm:w-32 sm:h-32 rounded" src="{{ asset('images/profile/' .$teacher->user->profile_picture) }}" alt="avatar">
+                    </div>
+                </div>
                 <div class="md:flex md:items-center mb-6">
                     <div class="md:w-1/3">
                         <label class="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4">
@@ -25,7 +33,7 @@
                         </label>
                     </div>
                     <div class="md:w-2/3">
-                        <input name="name" class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500" type="text" value="{{ old('name') }}">
+                        <input name="name" class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500" type="text" value="{{ $teacher->user->name }}">
                         @error('name')
                             <p class="text-red-500 text-xs italic">{{ $message }}</p>
                         @enderror
@@ -38,21 +46,8 @@
                         </label>
                     </div>
                     <div class="md:w-2/3">
-                        <input name="email" class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500" type="email" value="{{ old('email') }}">
+                        <input name="email" class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500" type="email" value="{{ $teacher->user->email }}">
                         @error('email')
-                            <p class="text-red-500 text-xs italic">{{ $message }}</p>
-                        @enderror
-                    </div>
-                </div>
-                <div class="md:flex md:items-center mb-6">
-                    <div class="md:w-1/3">
-                        <label class="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4">
-                            Password
-                        </label>
-                    </div>
-                    <div class="md:w-2/3">
-                        <input name="password" class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500" type="password">
-                        @error('password')
                             <p class="text-red-500 text-xs italic">{{ $message }}</p>
                         @enderror
                     </div>
@@ -64,7 +59,7 @@
                         </label>
                     </div>
                     <div class="md:w-2/3">
-                        <input name="phone" class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500" type="text" value="{{ old('phone') }}">
+                        <input name="phone" class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500" type="text" value="{{ $teacher->phone }}">
                         @error('phone')
                             <p class="text-red-500 text-xs italic">{{ $message }}</p>
                         @enderror
@@ -79,15 +74,15 @@
                     <div class="md:w-2/3">
                         <div class="flex flex-row items-center">
                             <label class="block text-gray-500 font-bold">
-                                <input name="gender" class="mr-2 leading-tight" type="radio" value="male">
+                                <input name="gender" class="mr-2 leading-tight" type="radio" value="male" {{ ($teacher->gender == 'male') ? 'checked' : '' }}>
                                 <span class="text-sm">Male</span>
                             </label>
                             <label class="ml-4 block text-gray-500 font-bold">
-                                <input name="gender" class="mr-2 leading-tight" type="radio" value="female">
+                                <input name="gender" class="mr-2 leading-tight" type="radio" value="female" {{ ($teacher->gender == 'female') ? 'checked' : '' }}>
                                 <span class="text-sm">Female</span>
                             </label>
                             <label class="ml-4 block text-gray-500 font-bold">
-                                <input name="gender" class="mr-2 leading-tight" type="radio" value="other">
+                                <input name="gender" class="mr-2 leading-tight" type="radio" value="other" {{ ($teacher->gender == 'other') ? 'checked' : '' }}>
                                 <span class="text-sm">Other</span>
                             </label>
                         </div>
@@ -103,7 +98,7 @@
                         </label>
                     </div>
                     <div class="md:w-2/3">
-                        <input name="dateofbirth" id="datepicker-tc" autocomplete="off" class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500" type="text" value="{{ old('dateofbirth') }}">
+                        <input name="dateofbirth" id="datepicker-te" autocomplete="off" class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500" type="text" value="{{ $teacher->dateofbirth }}">
                         @error('dateofbirth')
                             <p class="text-red-500 text-xs italic">{{ $message }}</p>
                         @enderror
@@ -116,7 +111,7 @@
                         </label>
                     </div>
                     <div class="md:w-2/3">
-                        <input name="current_address" class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500" type="text" value="{{ old('current_address') }}">
+                        <input name="current_address" class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500" type="text" value="{{ $teacher->current_address }}">
                         @error('current_address')
                             <p class="text-red-500 text-xs italic">{{ $message }}</p>
                         @enderror
@@ -129,13 +124,12 @@
                         </label>
                     </div>
                     <div class="md:w-2/3">
-                        <input name="permanent_address" class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500" type="text" value="{{ old('permanent_address') }}">
+                        <input name="permanent_address" class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500" type="text" value="{{ $teacher->permanent_address }}">
                         @error('permanent_address')
                             <p class="text-red-500 text-xs italic">{{ $message }}</p>
                         @enderror
                     </div>
                 </div>
-
                 <div class="md:flex md:items-center mb-6">
                     <div class="md:w-1/3">
                         <label class="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4">
@@ -147,45 +141,24 @@
                     </div>
                 </div>
 
-                <div class="md:flex md:items-center mb-6">
-                    <div class="md:w-1/3">
-                        <label class="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4">
-                            Assign Subject
-                        </label>
-                    </div>
-                    <div class="md:w-2/3 block text-gray-600 font-bold">
-                        <div class="relative">
-                            <select multiple name="subject_id[]" class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state">
-                                <option value="">--Select Subject--</option>
-                                @foreach(\App\Services\TimeTableService::subjectDropdown() as $subject)
-                                    <option value="{{ $subject->id }}">{{ $subject->name }}</option>
-                                @endforeach
-                            </select>
-                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"></path></svg>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
                 <div class="md:flex md:items-center">
                     <div class="md:w-1/3"></div>
                     <div class="md:w-2/3">
                         <button class="shadow bg-blue-500 hover:bg-blue-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded" type="submit">
-                            Create Teacher
+                            Update Teacher
                         </button>
                     </div>
                 </div>
-            </form>
+            </form>        
         </div>
-
+        
     </div>
 @endsection
 
 @push('scripts')
 <script>
-    $(function() {
-        $( "#datepicker-tc" ).datepicker({ dateFormat: 'yy-mm-dd' });
+    $(function() {       
+        $( "#datepicker-te" ).datepicker({ dateFormat: 'yy-mm-dd' });
     })
 </script>
 @endpush

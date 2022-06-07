@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\TeacherSubject;
 use App\User;
 use App\Teacher;
 use Illuminate\Http\Request;
@@ -17,8 +18,8 @@ class TeacherController extends Controller
      */
     public function index()
     {
-        $teachers = Teacher::with('user')->latest()->paginate(10);
 
+        $teachers = Teacher::with('user', 'subjects')->latest()->paginate(10);
         return view('backend.teachers.index', compact('teachers'));
     }
 
@@ -35,30 +36,30 @@ class TeacherController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request)
     {
         $request->validate([
-            'name'              => 'required|string|max:255',
-            'email'             => 'required|string|email|max:255|unique:users',
-            'password'          => 'required|string|min:8',
-            'gender'            => 'required|string',
-            'phone'             => 'required|string|max:255',
-            'dateofbirth'       => 'required|date',
-            'current_address'   => 'required|string|max:255',
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8',
+            'gender' => 'required|string',
+            'phone' => 'required|string|max:255',
+            'dateofbirth' => 'required|date',
+            'current_address' => 'required|string|max:255',
             'permanent_address' => 'required|string|max:255'
         ]);
 
         $user = User::create([
-            'name'      => $request->name,
-            'email'     => $request->email,
-            'password'  => Hash::make($request->password)
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password)
         ]);
-        
+
         if ($request->hasFile('profile_picture')) {
-            $profile = Str::slug($user->name).'-'.$user->id.'.'.$request->profile_picture->getClientOriginalExtension();
+            $profile = Str::slug($user->name) . '-' . $user->id . '.' . $request->profile_picture->getClientOriginalExtension();
             $request->profile_picture->move(public_path('images/profile'), $profile);
         } else {
             $profile = 'avatar.png';
@@ -68,12 +69,19 @@ class TeacherController extends Controller
         ]);
 
         $user->teacher()->create([
-            'gender'            => $request->gender,
-            'phone'             => $request->phone,
-            'dateofbirth'       => $request->dateofbirth,
-            'current_address'   => $request->current_address,
+            'gender' => $request->gender,
+            'phone' => $request->phone,
+            'dateofbirth' => $request->dateofbirth,
+            'current_address' => $request->current_address,
+//            'subject_id' => $request->subject_id,
             'permanent_address' => $request->permanent_address
         ]);
+        foreach ($request->subject_id as $subject) {
+            TeacherSubject::create([
+                'subject_id' => $subject,
+                'teacher_id' => $user->id,
+            ]);
+        }
 
         $user->assignRole('Teacher');
 
@@ -83,7 +91,7 @@ class TeacherController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Teacher  $teacher
+     * @param \App\Teacher $teacher
      * @return \Illuminate\Http\Response
      */
     public function show(Teacher $teacher)
@@ -94,12 +102,12 @@ class TeacherController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Teacher  $teacher
+     * @param \App\Teacher $teacher
      * @return \Illuminate\Http\Response
      */
     public function edit(Teacher $teacher)
     {
-        $teacher = Teacher::with('user')->findOrFail($teacher->id);
+        $teacher = Teacher::with('user', 'subjects')->findOrFail($teacher->id);
 
         return view('backend.teachers.edit', compact('teacher'));
     }
@@ -107,42 +115,51 @@ class TeacherController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Teacher  $teacher
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Teacher $teacher
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Teacher $teacher)
     {
         $request->validate([
-            'name'              => 'required|string|max:255',
-            'email'             => 'required|string|email|max:255|unique:users,email,'.$teacher->user_id,
-            'gender'            => 'required|string',
-            'phone'             => 'required|string|max:255',
-            'dateofbirth'       => 'required|date',
-            'current_address'   => 'required|string|max:255',
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email,' . $teacher->user_id,
+            'gender' => 'required|string',
+            'phone' => 'required|string|max:255',
+            'dateofbirth' => 'required|date',
+            'current_address' => 'required|string|max:255',
             'permanent_address' => 'required|string|max:255'
         ]);
+
+        $assign_teacher = TeacherSubject::where('teacher_id', $teacher->id)->delete();
+        foreach ($request->subject_id as $subject) {
+            TeacherSubject::create([
+                'subject_id' => $subject,
+                'teacher_id' => $teacher->user_id,
+            ]);
+        }
 
         $user = User::findOrFail($teacher->user_id);
 
         if ($request->hasFile('profile_picture')) {
-            $profile = Str::slug($user->name).'-'.$user->id.'.'.$request->profile_picture->getClientOriginalExtension();
+            $profile = Str::slug($user->name) . '-' . $user->id . '.' . $request->profile_picture->getClientOriginalExtension();
             $request->profile_picture->move(public_path('images/profile'), $profile);
         } else {
             $profile = $user->profile_picture;
         }
 
         $user->update([
-            'name'              => $request->name,
-            'email'             => $request->email,
-            'profile_picture'   => $profile
+            'name' => $request->name,
+            'email' => $request->email,
+            'profile_picture' => $profile
         ]);
 
         $user->teacher()->update([
-            'gender'            => $request->gender,
-            'phone'             => $request->phone,
-            'dateofbirth'       => $request->dateofbirth,
-            'current_address'   => $request->current_address,
+            'gender' => $request->gender,
+            'phone' => $request->phone,
+            'dateofbirth' => $request->dateofbirth,
+//            'subject_id'       => $request->subject_id,
+            'current_address' => $request->current_address,
             'permanent_address' => $request->permanent_address
         ]);
 
@@ -152,7 +169,7 @@ class TeacherController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Teacher  $teacher
+     * @param \App\Teacher $teacher
      * @return \Illuminate\Http\Response
      */
     public function destroy(Teacher $teacher)
@@ -160,11 +177,11 @@ class TeacherController extends Controller
         $user = User::findOrFail($teacher->user_id);
 
         $user->teacher()->delete();
-        
+
         $user->removeRole('Teacher');
 
         if ($user->delete()) {
-            if($user->profile_picture != 'avatar.png') {
+            if ($user->profile_picture != 'avatar.png') {
                 $image_path = public_path() . '/images/profile/' . $user->profile_picture;
                 if (is_file($image_path) && file_exists($image_path)) {
                     unlink($image_path);
