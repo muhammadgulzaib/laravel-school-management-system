@@ -47,7 +47,6 @@ class TimeTableService
     {
         $subjects = DB::table('grade_subject')->whereGradeId($class_id)->get();
         $teachers = TeacherSubject::whereSubjectId($subject_id)->get();
-        dd($teachers);
         $data = TimeTable::whereClassStartTime($start_time)
             ->whereClassEndTime($end_time)
             ->where('day', $day)

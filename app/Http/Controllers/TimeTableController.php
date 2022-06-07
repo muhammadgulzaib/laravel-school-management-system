@@ -77,7 +77,6 @@ class TimeTableController extends Controller
             }
 
         }
-        dd();
         return redirect(route('time-table.index'));
     }
 
