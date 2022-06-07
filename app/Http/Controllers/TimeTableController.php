@@ -55,6 +55,7 @@ class TimeTableController extends Controller
             $oneLectureTime = $diff_in_hours / $assign_subject;
             foreach (TimeTableService::getSectionOfClass($class->id) as $sectionIndex => $section) {
                 foreach (TimeTableService::DayArray() as $day) {
+
                     if ($day != "Saturday" || $day != "Sunday") {
                         for ($i = 0; $i < $assign_subject; $i++) {
                             $subject_id = TimeTableService::checkSubjectInTimeTable($class->id, $section->id, $day);
@@ -75,7 +76,6 @@ class TimeTableController extends Controller
                     }
                 }
             }
-
         }
         return redirect(route('time-table.index'));
     }

@@ -46,21 +46,25 @@ class TimeTableService
     public static function checkTeacherInTimeTable($class_id, $day, $start_time, $end_time, $subject_id, $section_id)
     {
         $subjects = DB::table('grade_subject')->whereGradeId($class_id)->get();
-        $teachers = TeacherSubject::whereSubjectId($subject_id)->get();
-        $data = TimeTable::whereClassStartTime($start_time)
-            ->whereClassEndTime($end_time)
-            ->where('day', $day)
-//                ->where('teacher_id', $teacher->teacher_id)
-            ->where('subject_id', $subject_id)
-//                ->where('grade_id', $class_id)
-            ->count();
-        if ($data == 0) {
-            return [
-//                    'subject_id' => $teacher->subject_id,
-                'subject_id' => $subject_id,
-            ];
+        $subjectRand = $subjects[rand(0,$subjects->count() - 1)];
+        $teachers = TeacherSubject::whereSubjectId($subjectRand->subject_id)->get();
+        foreach ($teachers as $teacher){
+            $data = TimeTable::where('day', $day)
+                ->where('grade_id', $class_id)
+//                ->where('section_id', $section_id)
+                ->where('subject_id', $subjectRand->subject_id)
+                ->where('teacher_id', $teacher->teacher_id)
+                ->count();
+
+            if ($data == 0) {
+                return [
+                    'teacher_id' => $teacher->teacher_id,
+                    'subject_id' => $teacher->subject_id,
+                ];
+            }
         }
-        return false;
+
+        return null;
     }
 
     public static function getSectionOfClass($class_id)
