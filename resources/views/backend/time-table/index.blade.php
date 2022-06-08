@@ -53,39 +53,6 @@
 
                 </div>
 
-                <div class="md:flex md:w-full md:items-center mb-6">
-
-{{--                    <div class="md:w-full mr-2">--}}
-{{--                        <label class="block text-gray-500 font-bold md:text-left mb-1 md:mb-0 pr-4">--}}
-{{--                            Select Class--}}
-{{--                        </label>--}}
-{{--                        <select name="grade_id"--}}
-{{--                                class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"--}}
-{{--                                id="grid-state">--}}
-{{--                            <option value="">--Select Class--</option>--}}
-{{--                            @foreach ($classes as $classData)--}}
-{{--                                <option value="{{ $classData->id }}">{{ $classData->class_name }}</option>--}}
-{{--                            @endforeach--}}
-{{--                        </select>--}}
-{{--                        @error('name')--}}
-{{--                        <p class="text-red-500 text-xs italic">{{ $message }}</p>--}}
-{{--                        @enderror--}}
-{{--                    </div>--}}
-
-{{--                    <div class="md:w-full mr-2">--}}
-{{--                        <label class="block text-gray-500 font-bold md:text-left mb-1 md:mb-0 pr-4">--}}
-{{--                            Total Lecture In Day--}}
-{{--                        </label>--}}
-{{--                        <input name="total_lecture"--}}
-{{--                               class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500"--}}
-{{--                               type="number" value="{{ old('class_name') }}">--}}
-{{--                        @error('name')--}}
-{{--                        <p class="text-red-500 text-xs italic">{{ $message }}</p>--}}
-{{--                        @enderror--}}
-{{--                    </div>--}}
-
-                </div>
-
                 <div class="md:flex md:items-right">
                     <div class="md:w-12/12"></div>
                     <div class="md:w-12/12">
@@ -102,7 +69,7 @@
         @foreach(\App\Services\TimeTableService::allSection() as $section)
             <div class="mt-8 p-5 bg-white rounded w-full border-b-4 border-gray-300">
                 <h3 class="text-center" style="font-size: 25px">
-                    Class: {{ $section->grade[0]->class_name }} ({{ $section->name }}) - {{ \App\Services\TimeTableService::allRoom($section->id)  }}
+                    Class: {{ $section->grade[0]->class_name }} ({{ $section->name }}) - {{ \App\Services\TimeTableService::allRoom($section->id) ?? null  }}
                 </h3>
                 <div class="container">
                     <div class="table-responsive">

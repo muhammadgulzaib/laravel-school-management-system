@@ -27,9 +27,9 @@ class TimeTableService
         ];
     }
 
-    public static function allRoom($section_id)
+    public static function allRoom($section_id = null)
     {
-        return TimeTable::where('section_id',$section_id)->first()->room_id;
+            return TimeTable::where('section_id',$section_id)->first()->room_id ?? null;
     }
 
     public static function checkSubjectInTimeTable($class_id, $section_id, $day)

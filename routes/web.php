@@ -15,6 +15,10 @@ Route::get('/', function () {
     return redirect('/login');
 });
 
+Route::get('/time-table-show', function () {
+    return view('backend.time-table.show');
+});
+
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
