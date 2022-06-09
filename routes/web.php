@@ -55,6 +55,9 @@ Route::group(['middleware' => ['auth','role:Admin']], function ()
     Route::resource('student', 'StudentController');
     Route::get('attendance', 'AttendanceController@index')->name('attendance.index');
 
+    Route::get('exam-time-table', 'TimeTableController@examTimeTable')->name('exam.time.table');
+    Route::post('exam-time-table-store', 'TimeTableController@examTimeTableStore')->name('exam.time.table.store');
+
 });
 
 Route::group(['middleware' => ['auth','role:Teacher']], function ()
