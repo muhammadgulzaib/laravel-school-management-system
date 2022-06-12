@@ -5,7 +5,7 @@
     <div class="roles-permissions">
         <div class="flex items-center justify-between mb-6">
             <div>
-                <h2 class="text-gray-700 uppercase font-bold">Time Table</h2>
+                <h2 class="text-gray-700 uppercase font-bold">TimeTable</h2>
             </div>
             <div class="flex flex-wrap items-center">
                 <a href="{{ route('time-table.create') }}"
@@ -16,7 +16,7 @@
                         <path fill="currentColor"
                               d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"></path>
                     </svg>
-                    <span class="ml-2 text-xs font-semibold">Time Table</span>
+                    <span class="ml-2 text-xs font-semibold">TimeTable</span>
                 </a>
             </div>
         </div>
@@ -59,7 +59,7 @@
                         <button
                             class="shadow bg-blue-500 hover:bg-blue-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded"
                             type="submit">
-                            Create Time Table
+                            Create TimeTable
                         </button>
                     </div>
                 </div>
@@ -69,7 +69,7 @@
         @foreach(\App\Services\TimeTableService::allSection() as $section)
             <div class="mt-8 p-5 bg-white rounded w-full border-b-4 border-gray-300">
                 <h3 class="text-center" style="font-size: 25px">
-                    Class: {{ $section->grade[0]->class_name }} ({{ $section->name }}) - {{ \App\Services\TimeTableService::allRoom($section->id) ?? null  }}
+                    Semester: {{ $section->grade[0]->class_name }} ({{ $section->name }}) - {{ \App\Services\TimeTableService::allRoom($section->id) ?? null  }}
                 </h3>
                 <div class="container">
                     <div class="table-responsive">

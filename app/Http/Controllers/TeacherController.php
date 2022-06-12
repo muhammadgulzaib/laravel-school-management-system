@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\TeacherSubject;
 use App\User;
 use App\Teacher;
+use App\NoticeBoard;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -21,6 +22,44 @@ class TeacherController extends Controller
 
         $teachers = Teacher::with('user', 'subjects')->latest()->paginate(10);
         return view('backend.teachers.index', compact('teachers'));
+    }
+
+    public function noticeBoard()
+    {
+        $notices = noticeBoard::all();
+        // return $notice;
+        return view('noticeBoard.index' , compact('notices'));
+    }
+
+    public function addNotice()
+    {
+        return view('noticeBoard.create');
+    }
+
+    public function destroyNotice($id)
+    {
+        // return $id;
+        $notice = noticeBoard::find($id);
+        $notice->delete();
+        return redirect()->back();
+    }
+
+
+    public function saveNotice(Request $request)
+    {
+        // return $request;
+        $notice = NoticeBoard::create([
+            'description'=> $request['description'],
+        ]);
+
+        return redirect()->route('notice.board.index');
+    }
+
+
+    public function showNotice()
+    {
+        $notices = NoticeBoard::all();
+        return view('NoticeBoard.show', compact('notices'));
     }
 
     /**

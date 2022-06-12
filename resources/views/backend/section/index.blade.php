@@ -16,8 +16,8 @@
         <div class="mt-8 bg-white rounded border-b-4 border-gray-300">
             <div class="flex flex-wrap items-center uppercase text-sm font-semibold bg-gray-300 text-gray-600 rounded-tl rounded-tr">
                 <div class="w-1/12 px-4 py-3">#</div>
-                <div class="w-4/12 px-4 py-3">Name</div>
-                <div class="w-5/12 px-4 py-3">Class</div>
+                <div class="w-4/12 px-4 py-3">Section</div>
+                <div class="w-5/12 px-4 py-3">Semester</div>
                 <div class="w-2/12 px-4 py-3 text-right">Action</div>
             </div>
             @foreach ($sections as $key => $section)

@@ -19,6 +19,8 @@ Route::get('/time-table-show', function () {
     return view('backend.time-table.show');
 });
 
+Route::get('/notice-board', 'TeacherController@showNotice');
+
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
@@ -54,6 +56,13 @@ Route::group(['middleware' => ['auth','role:Admin']], function ()
     Route::resource('parents', 'ParentsController');
     Route::resource('student', 'StudentController');
     Route::get('attendance', 'AttendanceController@index')->name('attendance.index');
+
+    Route::get('/notice/board', 'TeacherController@noticeBoard')->name('notice.board.index');
+    Route::get('/notice/board/add', 'TeacherController@addNotice')->name('add.notice');
+    Route::post('/notice/board/save', 'TeacherController@saveNotice')->name('save.notice');
+    Route::delete('/notice/board/{id}', 'TeacherController@destroyNotice')->name('notice.destroy');
+
+
 
 });
 
