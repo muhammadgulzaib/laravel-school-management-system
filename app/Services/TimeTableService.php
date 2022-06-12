@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\ExamTimeTable;
 use App\Room;
 use App\Section;
 use App\Subject;
@@ -50,17 +51,17 @@ class TimeTableService
 
     public static function checkTeacherInTimeTable($class_id, $day, $start_time, $end_time, $subject_id, $section_id)
     {
+
         $subjects = DB::table('grade_subject')->whereGradeId($class_id)->get();
         $subjectRand = $subjects[rand(0, $subjects->count() - 1)];
         $teachers = TeacherSubject::whereSubjectId($subjectRand->subject_id)->get();
         foreach ($teachers as $teacher) {
-            $data = TimeTable::where('day', $day)
+            $data = ExamTimeTable::where('day', $day)
                 ->where('grade_id', $class_id)
 //                ->where('section_id', $section_id)
                 ->where('subject_id', $subjectRand->subject_id)
                 ->where('teacher_id', $teacher->teacher_id)
                 ->count();
-
             if ($data == 0) {
                 return [
                     'teacher_id' => $teacher->teacher_id,
@@ -111,6 +112,14 @@ class TimeTableService
     public static function getTimeTableDayClass($section_id, $class_id, $day)
     {
         return TimeTable::with('teacher', 'subject')->whereSectionId($section_id)
+            ->whereGradeId($class_id)
+            ->where('day', $day)
+            ->get();
+    }
+
+    public static function getExamTimeTableDayClass($section_id, $class_id, $day)
+    {
+        return ExamTimeTable::with('teacher', 'subject')->whereSectionId($section_id)
             ->whereGradeId($class_id)
             ->where('day', $day)
             ->get();

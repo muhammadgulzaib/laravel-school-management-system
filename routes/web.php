@@ -57,12 +57,17 @@ Route::group(['middleware' => ['auth','role:Admin']], function ()
     Route::resource('student', 'StudentController');
     Route::get('attendance', 'AttendanceController@index')->name('attendance.index');
 
+<<<<<<< HEAD
     Route::get('/notice/board', 'TeacherController@noticeBoard')->name('notice.board.index');
     Route::get('/notice/board/add', 'TeacherController@addNotice')->name('add.notice');
     Route::post('/notice/board/save', 'TeacherController@saveNotice')->name('save.notice');
     Route::delete('/notice/board/{id}', 'TeacherController@destroyNotice')->name('notice.destroy');
 
 
+=======
+    Route::get('exam-time-table', 'TimeTableController@examTimeTable')->name('exam.time.table');
+    Route::post('exam-time-table-store', 'TimeTableController@examTimeTableStore')->name('exam.time.table.store');
+>>>>>>> c8402796ada914ed167e65f9a4cb90d430244e4f
 
 });
 
